@@ -1,6 +1,12 @@
 #ifndef __LIBCRYPTOHIVE_H__
 #define __LIBCRYPTOHIVE_H__
 
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //inputLen£ºMaximum length of input buffer.
 #define inputLenMax 84
 
@@ -24,5 +30,9 @@ void cryptohive_hash_v1(unsigned char input[], unsigned char output[], uint32_t 
 
 //cryptohive_hash: Determine which hash function to call.
 void cryptohive_hash(unsigned char input[], unsigned char output[], uint32_t inputLen);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__LIBCRYPTOHIVE_H__

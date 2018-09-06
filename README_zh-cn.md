@@ -16,18 +16,13 @@
 所以我创建了这个repo，用来将这个WebAssembly文件转换为其他语言可用的库。  
   
 ## 如何使用 ##
-注意：我不保证能够正常编译、正常运行、正常计算，等等。
-我只在自己的电脑上（Win10 x64，TCC 0.9.27 x86，CoinHive worker-v2.wasm）测试过。  
-### 1. 下载WebAssembly文件 ###
-下载上面提到的文件并重命名为 `coinhive.wasm`，置于repo目录下。  
-### 2. 下载运行时文件 ###
+*注意：我不保证能够正常编译、正常运行、正常计算，等等。
+我只在自己的电脑上（Win10 x64， ~~TCC 0.9.27 x86~~ MinGW-w64，CoinHive worker-v2.wasm）测试过。*  
+### 1. 下载运行时文件 ###
 从[这里](https://github.com/WebAssembly/wabt/tree/master/wasm2c)下载所有文件名以 `wasm-rt` 开头的文件。  
-### 3. 生成剩下的文件 ###
-`wasm2c coinhive.wasm -o coinhive.c`  
-`wasm2c`可以从[这里](https://github.com/WebAssembly/wabt/releases)下载。  
-### 4. 编译 ###
+### 2. 编译 ###
 把所有C文件（除了 `Test.c`）编译到一起，生成DLL文件。  
-### 5. 在程序中引用 ###
+### 3. 在程序中引用 ###
 参见 `libcryptohive.h`和 `Test.c`。
 
 ## 开源许可 ##

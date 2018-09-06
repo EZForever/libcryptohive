@@ -1,4 +1,4 @@
-//$TCC -I./ -L./Release/ -llibcryptohive Test.c -o ./Release/Test.exe
+//gcc -I. -L./Release -llibcryptohive Test.c -o ./Release/Test.exe
 /* Test data:
 0707b0cd9dd605d16dd9b0f5e59ce246ab39fd9413a889419b4a32385190c296e98f53f4a08347b50caf0448eba682b41bcdd20572d5a43a585ced0ad4dd1723d0da5a79af17aa8f949eae0f
 a206161b78840ab02479d7cedc4d10cbd8a9474a049417914c0a2de987365f00

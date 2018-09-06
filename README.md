@@ -16,19 +16,14 @@ However, this part of the code is compiled into a WebAssembly file([Download](ht
 So I created this repo to transform the WebAssembly file into a library available in other languages.  
   
 ## Usage ##
-Important note: I do not guarantee that it can compile correctly, run correctly, calculate correctly, and so on.  
-I only tested it on my own computer (Win10 x64, TCC 0.9.27 x86, CoinHive worker-v2.wasm).  
-### 1. Download WebAssembly file ###
-Download the file mentioned above and rename it to `coinhive.wasm` and put it in the repo directory.  
-### 2. Download runtime files ###
+*Important note: I do not guarantee that it can compile correctly, run correctly, calculate correctly, and so on.  
+I only tested it on my own computer (Win10 x64, ~~TCC 0.9.27 x86~~ MinGW-w64, CoinHive worker-v2.wasm).*  
+### 1. Download runtime files ###
 Download all files with filenames beginning with `wasm-rt` from [here](https://github.com/WebAssembly/wabt/tree/master/wasm2c).
-### 3. Generate the remaining files ###
-`wasm2c coinhive.wasm -o coinhive.c`  
-`wasm2c` can be downloaded from [here](https://github.com/WebAssembly/wabt/releases). 
-### 4. Compile ###
+### 2. Compile ###
 Compile all C files (except `Test.c`) together to generate a DLL file.  
-### 5. Reference in program ###
+### 3. Reference in program ###
 See `libcryptohive.h` and `Test.c`.
-
+  
 ## License ##
 [GLWTPL](https://github.com/me-shaon/GLWTPL/blob/master/LICENSE)  

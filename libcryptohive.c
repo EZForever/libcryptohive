@@ -1,10 +1,10 @@
-//$TCC -shared coinhive.c wasm-rt-impl.c libcryptohive.c -o ./Release/libcryptohive.dll
+//gcc -shared -static -fvisibility=hidden coinhive.c wasm-rt-impl.c libcryptohive.c -o ./Release/libcryptohive.dll -Wl,--out-implib,./Release/libcryptohive.a
 //libcryptohive v0.0.1 Dev (2018-09-06)
-#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
 #include "coinhive.h"
 #include "libcryptohive.h"
 
@@ -22,15 +22,21 @@
 #define inputOffset 0x702e20
 #define outputOffset 0x702e78
 
+//--- Private definitions ---
+
+THREAD struct {
+  u32 ctx;
+  wasm_rt_memory_t envMemory;
+  wasm_rt_table_t envTable;
+} cryptohive_ctx = {0};
+
 //--- Import definitions ---
 
 /* import: 'env' 'memory' */
-wasm_rt_memory_t envMemory = {NULL};
-wasm_rt_memory_t *Z_envZ_memory = &envMemory;
+THREAD wasm_rt_memory_t *Z_envZ_memory = NULL;
 
 /* import: 'env' 'table' */
-wasm_rt_table_t envTable = {NULL};
-wasm_rt_table_t *Z_envZ_table = &envTable;
+THREAD wasm_rt_table_t *Z_envZ_table = NULL;
 
 /* import: 'env' 'tableBase' */
 u32 envTableBase = 0;
@@ -80,9 +86,6 @@ u32 (*Z_envZ__ftimeZ_ii)(u32) = &envFTime;
 u32 envGMTime(u32);
 u32 (*Z_envZ__gmtimeZ_ii)(u32) = envGMTime;
 
-//--- Private definitions ---
-u32 ctx = 0;
-
 //--- Import fixup functions ---
 
 __attribute__((noreturn)) void envAbort(u32 what) {
@@ -108,7 +111,7 @@ __attribute__((noreturn)) u32 envAbortOnCannotGrowMemory(void) {
 void envSetErrNo(u32 value) {
   //TODO: Translate this
   //if (Module["___errno_location"]) HEAP32[Module["___errno_location"]() >> 2] = value;
-  //return value;
+  //return value; //???
 }
 
 u32 envSyscall20(u32 which, u32 varargs) {
@@ -126,32 +129,35 @@ u32 envSyscall20(u32 which, u32 varargs) {
 }
 
 u32 envEmscripten_memcpy_big(u32 dest, u32 src, u32 num) {
-  memcpy(&envMemory.data[dest], &envMemory.data[src], num);
+  memcpy(&cryptohive_ctx.envMemory.data[dest], &cryptohive_ctx.envMemory.data[src], num);
   return dest;
 }
 
 u32 envFTime(u32 p) {
   time_t millis = time(NULL);
-  *(u32*)(&envMemory.data[p]) = (u32)(millis / 1000);
-  *(u16*)(&envMemory.data[p + 4]) = (u16)(millis % 1000);
-  *(u16*)(&envMemory.data[p + 6]) = (u16)0;
-  *(u16*)(&envMemory.data[p + 8]) = (u16)0;
+  *(u32*)(&cryptohive_ctx.envMemory.data[p]) = (u32)(millis / 1000);
+  *(u16*)(&cryptohive_ctx.envMemory.data[p + 4]) = (u16)(millis % 1000);
+  *(u16*)(&cryptohive_ctx.envMemory.data[p + 6]) = (u16)0;
+  *(u16*)(&cryptohive_ctx.envMemory.data[p + 8]) = (u16)0;
   return 0;
 }
 
 u32 _gmtime_r(u32 _time, u32 tmPtr) {
-  struct tm *date = gmtime((time_t*)&envMemory.data[_time]);
-  *(u32*)(&envMemory.data[tmPtr]) = date->tm_sec;
-  *(u32*)(&envMemory.data[tmPtr + 4]) = date->tm_min;
-  *(u32*)(&envMemory.data[tmPtr + 8]) = date->tm_hour;
-  *(u32*)(&envMemory.data[tmPtr + 12]) = date->tm_mday;
-  *(u32*)(&envMemory.data[tmPtr + 16]) = date->tm_mon;
-  *(u32*)(&envMemory.data[tmPtr + 20]) = date->tm_year;
-  *(u32*)(&envMemory.data[tmPtr + 24]) = date->tm_wday;
-  *(u32*)(&envMemory.data[tmPtr + 28]) = date->tm_yday;
-  *(u32*)(&envMemory.data[tmPtr + 32]) = 0; //date->tm_isdst;
-  *(u32*)(&envMemory.data[tmPtr + 36]) = 0;
-  *(u32*)(&envMemory.data[tmPtr + 40]) = ___tm_timezone;
+  //FIXME: gmtime() always return 0
+  //time_t timestamp = *(time_t *)&cryptohive_ctx.envMemory.data[_time] * 1000;
+  //struct tm *date = gmtime(&timestamp);
+  struct tm dateS = {0}, *date = &dateS;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr]) = date->tm_sec;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 4]) = date->tm_min;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 8]) = date->tm_hour;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 12]) = date->tm_mday;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 16]) = date->tm_mon;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 20]) = date->tm_year;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 24]) = date->tm_wday;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 28]) = date->tm_yday;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 32]) = 0; //date->tm_isdst;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 36]) = 0;
+  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 40]) = ___tm_timezone;
   return tmPtr;
 }
 
@@ -159,69 +165,51 @@ u32 envGMTime(u32 _time) {
   return _gmtime_r(_time, ___tm_current);
 }
 
-//--- Attach / detach functions ---
-
-/*__attribute__((constructor))*/ void onAttach(void) {
-  wasm_rt_allocate_memory(Z_envZ_memory, PAGE_NUM, UINT32_MAX);
-  wasm_rt_allocate_table(Z_envZ_table, 8u, 8u);
-  init();
-  strcpy((char*)&envMemory.data[___tm_timezone], "GMT");
-  *(u32*)(&envMemory.data[DYNAMICTOP_PTR]) = DYNAMIC_BASE;
-}
-
-/*__attribute__((destructor))*/ void onDetach(void) {
-  free(envMemory.data);
-  for(int i = 0; i < envTable.size; i++)
-    free(&envTable.data[i]);
-}
-
-#if 1 //#ifdef __TINYC__ //TinyCC currently doesn't know __attribute__((constructor))
-BOOL WINAPI DllMain(HINSTANCE hInstDLL, DWORD fdwReason, LPVOID lpvReserved) {
-  if(fdwReason == DLL_PROCESS_ATTACH) {
-    onAttach();
-  } else if(fdwReason == DLL_PROCESS_DETACH) {
-    onDetach();
-  }
-  return TRUE;
-}
-#endif
-
 //--- Private functions ---
 
 void _cryptohive_Input(unsigned char input[], uint32_t inputLen) {
-  memcpy(&envMemory.data[inputOffset], input, inputLen);
+  memcpy(&cryptohive_ctx.envMemory.data[inputOffset], input, inputLen);
 }
 
 void _cryptohive_Output(unsigned char output[]) {
-  memcpy(output, &envMemory.data[outputOffset], outputLen);
+  memcpy(output, &cryptohive_ctx.envMemory.data[outputOffset], outputLen);
 }
 
 //--- Public functions ---
 
-#define EXPORT __declspec(dllexport)
+#define EXPORT __attribute__((visibility("default")))
 
 EXPORT void cryptohive_create(void) {
-  ctx = (*WASM_RT_ADD_PREFIX(Z__cryptonight_createZ_iv))();
+  Z_envZ_memory = &cryptohive_ctx.envMemory;
+  Z_envZ_table = &cryptohive_ctx.envTable;
+
+  wasm_rt_allocate_memory(Z_envZ_memory, PAGE_NUM, UINT32_MAX);
+  wasm_rt_allocate_table(Z_envZ_table, 8u, 8u);
+  init();
+  strcpy((char*)&cryptohive_ctx.envMemory.data[___tm_timezone], "GMT");
+  *(u32*)(&cryptohive_ctx.envMemory.data[DYNAMICTOP_PTR]) = DYNAMIC_BASE;
+
+  cryptohive_ctx.ctx = (*WASM_RT_ADD_PREFIX(Z__cryptonight_createZ_iv))();
 }
 
 EXPORT void cryptohive_destroy(void) {
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_destroyZ_vi))(ctx);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_destroyZ_vi))(cryptohive_ctx.ctx);
+  free(cryptohive_ctx.envMemory.data);
+  free(cryptohive_ctx.envTable.data);
 }
 
 EXPORT void cryptohive_hash_v0(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(ctx, inputOffset, outputOffset, inputLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
   _cryptohive_Output(output);
 }
 
 EXPORT void cryptohive_hash_v1(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(ctx, inputOffset, outputOffset, inputLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
   _cryptohive_Output(output);
 }
 
 EXPORT void cryptohive_hash(unsigned char input[], unsigned char output[], uint32_t inputLen) {
-//  if(input[0] == 7) cryptohive_hash_v1(input, output, inputLen);
-//    else cryptohive_hash_v0(input, output, inputLen);
   (*(input[0] == 7 ? &cryptohive_hash_v1 : &cryptohive_hash_v0))(input, output, inputLen);
 }
