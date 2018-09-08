@@ -22,5 +22,5 @@ Just compile all C files (except `Test*.c`) together to generate a DLL/SO file.
 See `libcryptohive.h` and `Test*.c` for details.  
   
 ## License ##
-`wasm-rt*` files from [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c): [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+`wasm-rt*` files from [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c): [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)  
 Other files: [GLWTPL](https://github.com/me-shaon/GLWTPL/blob/master/LICENSE)  

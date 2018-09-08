@@ -22,5 +22,5 @@
 具体使用方式参见 `libcryptohive.h`和 `Test.c`。  
   
 ## 开源许可 ##
-`wasm-rt*` 修改自 [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c)，遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)。
+`wasm-rt*` 修改自 [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c)，遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)。  
 其余文件： [GLWTPL](https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN)  
