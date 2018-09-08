@@ -18,12 +18,8 @@ So I created this repo to transform the WebAssembly file into a library availabl
 ## Usage ##
 *Important note: I do not guarantee that it can compile correctly, run correctly, calculate correctly, and so on.  
 I only tested it on my own computer (Win10 x64, ~~TCC 0.9.27 x86~~ MinGW-w64, CoinHive worker-v2.wasm).*  
-### 1. Download runtime files ###
-Download all files with filenames beginning with `wasm-rt` from [here](https://github.com/WebAssembly/wabt/tree/master/wasm2c).
-### 2. Compile ###
-Compile all C files (except `Test.c`) together to generate a DLL/SO file.  
-### 3. Reference in program ###
-See `libcryptohive.h` and `Test.c`.
+Just compile all C files (except `Test*.c`) together to generate a DLL/SO file.  
+See `libcryptohive.h` and `Test*.c` for details.  
   
 ## License ##
 `wasm-rt*` files from [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c): [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
