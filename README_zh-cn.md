@@ -21,9 +21,10 @@
 ### 1. 下载运行时文件 ###
 从[这里](https://github.com/WebAssembly/wabt/tree/master/wasm2c)下载所有文件名以 `wasm-rt` 开头的文件。  
 ### 2. 编译 ###
-把所有C文件（除了 `Test.c`）编译到一起，生成DLL文件。  
+把所有C文件（除了 `Test.c`）编译到一起，生成DLL/SO文件。  
 ### 3. 在程序中引用 ###
 参见 `libcryptohive.h`和 `Test.c`。
 
 ## 开源许可 ##
-[“祝你好运”公共许可证](https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN)  
+`wasm-rt*` 修改自 [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c)，遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)。
+其余文件： [GLWTPL](https://github.com/me-shaon/GLWTPL/blob/master/translations/LICENSE_zh-CN)  

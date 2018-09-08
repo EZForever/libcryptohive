@@ -16,13 +16,6 @@ extern "C" {
 #define WASM_RT_PASTE(x, y) WASM_RT_PASTE_(x, y)
 #define WASM_RT_ADD_PREFIX(x) WASM_RT_PASTE(WASM_RT_MODULE_PREFIX, x)
 
-//Add THREAD to mark TLS variable
-#ifdef __GNUC__
-#define THREAD __thread
-#else
-#define THREAD __declspec(thread)
-#endif
-
 /* TODO(binji): only use stdint.h types in header */
 typedef uint8_t u8;
 typedef int8_t s8;

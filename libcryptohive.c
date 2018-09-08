@@ -134,35 +134,22 @@ u32 envEmscripten_memcpy_big(u32 dest, u32 src, u32 num) {
 }
 
 u32 envFTime(u32 p) {
-  time_t millis = time(NULL);
-  *(u32*)(&cryptohive_ctx.envMemory.data[p]) = (u32)(millis / 1000);
-  *(u16*)(&cryptohive_ctx.envMemory.data[p + 4]) = (u16)(millis % 1000);
-  *(u16*)(&cryptohive_ctx.envMemory.data[p + 6]) = (u16)0;
-  *(u16*)(&cryptohive_ctx.envMemory.data[p + 8]) = (u16)0;
+  ftime((struct timeb *)&cryptohive_ctx.envMemory.data[p]);
   return 0;
 }
 
-u32 _gmtime_r(u32 _time, u32 tmPtr) {
-  //FIXME: gmtime() always return 0
-  //time_t timestamp = *(time_t *)&cryptohive_ctx.envMemory.data[_time] * 1000;
-  //struct tm *date = gmtime(&timestamp);
-  struct tm dateS = {0}, *date = &dateS;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr]) = date->tm_sec;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 4]) = date->tm_min;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 8]) = date->tm_hour;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 12]) = date->tm_mday;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 16]) = date->tm_mon;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 20]) = date->tm_year;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 24]) = date->tm_wday;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 28]) = date->tm_yday;
-  *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 32]) = 0; //date->tm_isdst;
+u32 envGMTimeR(u32 _time, u32 tmPtr) {
+  time_t timestamp = *(time_t *)&cryptohive_ctx.envMemory.data[_time] * 1000;
+  //I can't get this to work
+  //gmtime_r(&timestamp, (struct tm *)&cryptohive_ctx.envMemory.data[tmPtr]);
+  gmtime_s((struct tm *)&cryptohive_ctx.envMemory.data[tmPtr], &timestamp);
   *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 36]) = 0;
   *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 40]) = ___tm_timezone;
   return tmPtr;
 }
 
 u32 envGMTime(u32 _time) {
-  return _gmtime_r(_time, ___tm_current);
+  return envGMTimeR(_time, ___tm_current);
 }
 
 //--- Private functions ---

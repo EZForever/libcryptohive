@@ -1,6 +1,6 @@
 ## TODO ##
 - [x] Make it work  
-- [ ] Thread-safe (untested)  
+- [x] Thread-safe (~~Stupid stack depth & jmpbuf~~)  
 - [x] Non-Windows support (no w32api reference)    
 - [ ] x86 support (untested)  
 - [ ] ~~Performance~~  
