@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "wasm-rt-impl.h"
 #include "coinhive.h"
 #include "libcryptohive.h"
 
@@ -17,9 +18,13 @@
 #define STACKTOP 0x2c60
 #define DYNAMIC_BASE 0x502c60
 
-//Fetched from a running thread
-#define inputOffset 0x702e20
-#define outputOffset 0x702e78
+#define TRY(ret) {\
+  wasm_rt_trap_t _TrapCode = wasm_rt_impl_try(); \
+  if (_TrapCode != WASM_RT_TRAP_NONE) { \
+    printf("[E][LIB] %s: TRAP %d\n", __func__, _TrapCode); \
+    return ret; \
+  } \
+}
 
 //--- Private definitions ---
 
@@ -28,6 +33,9 @@ THREAD struct {
   wasm_rt_memory_t envMemory;
   wasm_rt_table_t envTable;
 } cryptohive_ctx = {0};
+
+u32 inputOffset = 0;
+u32 outputOffset = 0;
 
 //--- Import definitions ---
 
@@ -175,6 +183,9 @@ EXPORT void cryptohive_create(void) {
   strcpy((char*)&cryptohive_ctx.envMemory.data[___tm_timezone], "GMT");
   *(u32*)(&cryptohive_ctx.envMemory.data[DYNAMICTOP_PTR]) = DYNAMIC_BASE;
 
+  TRY()
+  inputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(inputLenMax);
+  outputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(outputLen);
   cryptohive_ctx.ctx = (*WASM_RT_ADD_PREFIX(Z__cryptonight_createZ_iv))();
 }
 
@@ -186,12 +197,14 @@ EXPORT void cryptohive_destroy(void) {
 
 EXPORT void cryptohive_hash_v0(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
+  TRY()
   (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
   _cryptohive_Output(output);
 }
 
 EXPORT void cryptohive_hash_v1(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
+  TRY()
   (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
   _cryptohive_Output(output);
 }

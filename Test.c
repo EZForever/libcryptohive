@@ -16,7 +16,7 @@ int main(void) {
   }
   putchar('\n');
   cryptohive_create();
-  cryptohive_hash(input, output, blobLen);
+  cryptohive_hash_v1(input, output, blobLen);
   for(int i = 0; i < outputLen; i++)
     printf("%02hhx", output[i]);
   putchar('\n');
