@@ -19,7 +19,7 @@
 *注意：我不保证能够正常编译、正常运行、正常计算，等等。
 我只在自己的电脑上（Win10 x64， ~~TCC 0.9.27 x86~~ MinGW-w64，CoinHive worker-v2.wasm）测试过。*  
 把所有C文件（除了 `Test*.c`）编译到一起，生成DLL/SO文件。  
-具体使用方式参见 `libcryptohive.h`和 `Test.c`。  
+具体使用方式参见 `libcryptohive.h`和 `Test*.c`。  
   
 ## 开源许可 ##
 `wasm-rt*` 修改自 [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c)，遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)。  

@@ -1,5 +1,4 @@
 //gcc -shared -static -fvisibility=hidden coinhive.c wasm-rt-impl.c libcryptohive.c -o ./Release/libcryptohive.dll -Wl,--out-implib,./Release/libcryptohive.a
-//libcryptohive v0.0.1 Dev (2018-09-06)
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -199,4 +198,20 @@ EXPORT void cryptohive_hash_v1(unsigned char input[], unsigned char output[], ui
 
 EXPORT void cryptohive_hash(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   (*(input[0] == 7 ? &cryptohive_hash_v1 : &cryptohive_hash_v0))(input, output, inputLen);
+}
+
+EXPORT unsigned char *cryptohive_pInput(void) {
+  return (unsigned char *)&cryptohive_ctx.envMemory.data[inputOffset];
+}
+
+EXPORT unsigned char *cryptohive_pOutput(void) {
+  return (unsigned char *)&cryptohive_ctx.envMemory.data[outputOffset];
+}
+
+EXPORT void cryptohive_hash_v0_Q(void) {
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, blobLen);
+}
+
+EXPORT void cryptohive_hash_v1_Q(void) {
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, blobLen);
 }
