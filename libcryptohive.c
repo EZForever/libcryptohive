@@ -18,7 +18,7 @@
 #define STACKTOP 0x2c60
 #define DYNAMIC_BASE 0x502c60
 
-#define TRY(ret) {\
+#define TRY(ret) { \
   wasm_rt_trap_t _TrapCode = wasm_rt_impl_try(); \
   if (_TrapCode != WASM_RT_TRAP_NONE) { \
     printf("[E][LIB] %s: TRAP %d\n", __func__, _TrapCode); \
