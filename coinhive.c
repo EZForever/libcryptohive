@@ -26,6 +26,7 @@
 #define MEMCHECK(mem, a, t)  \
   if (UNLIKELY((a) + sizeof(t) > mem->size)) TRAP(OOB)
 
+/* Is memcpy() slower?
 #define DEFINE_LOAD(name, t1, t2, t3)              \
   static inline t3 name(wasm_rt_memory_t* mem, u64 addr) {   \
     MEMCHECK(mem, addr, t1);                       \
@@ -39,6 +40,20 @@
     MEMCHECK(mem, addr, t1);                                 \
     t1 wrapped = (t1)value;                                  \
     memcpy(&mem->data[addr], &wrapped, sizeof(t1));          \
+  }
+*/
+
+//DEFINE_LOAD(FunctionName, ReadType, TransType1, TransType2)
+#define DEFINE_LOAD(name, t1, t2, t3) \
+  static inline t3 name(wasm_rt_memory_t* mem, u64 addr) { \
+    MEMCHECK(mem, addr, t1); \
+    return (t3)(t2)*(t1 *)&mem->data[addr]; \
+  }
+
+//DEFINE_STORE(FunctionName, WriteType, ReadType)
+#define DEFINE_STORE(name, t1, t2) \
+  static inline void name(wasm_rt_memory_t* mem, u64 addr, t2 value) { \
+    *(t1 *)&mem->data[addr] = (t1)value; \
   }
 
 DEFINE_LOAD(i32_load, u32, u32, u32);
@@ -135,11 +150,19 @@ DEFINE_STORE(i64_store32, u32, u64);
 #define I32_TRUNC_U_F64(x) TRUNC_U(u32, f64, UINT32_MAX, >,  x)
 #define I64_TRUNC_U_F64(x) TRUNC_U(u64, f64, UINT64_MAX, >=, x)
 
+/* This is actually not used...
 #define DEFINE_REINTERPRET(name, t1, t2)  \
   static inline t2 name(t1 x) {           \
     t2 result;                            \
     memcpy(&result, &x, sizeof(result));  \
     return result;                        \
+  }
+*/
+
+//DEFINE_REINTERPRET(FunctionName, InType, OutType)
+#define DEFINE_REINTERPRET(name, t1, t2)  \
+  static inline t2 name(t1 x) { \
+    return *(t2 *)&x; \
   }
 
 DEFINE_REINTERPRET(f32_reinterpret_i32, u32, f32)

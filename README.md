@@ -19,6 +19,7 @@ So I created this repo to transform the WebAssembly file into a library availabl
 *Important note: I do not guarantee that it can compile correctly, run correctly, calculate correctly, and so on.  
 I only tested it on my own computer (Win10 x64, ~~TCC 0.9.27 x86~~ MinGW-w64, CoinHive worker-v2.wasm).*  
 Just compile all C files (except `Test*.c`) together to generate a DLL/SO file.  
+Turn on `-O3` for better (about 7x) performance.  
 See `libcryptohive.h` and `Test*.c` for details.  
   
 ## License ##

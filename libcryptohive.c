@@ -1,4 +1,4 @@
-//gcc -shared -static -fvisibility=hidden coinhive.c wasm-rt-impl.c libcryptohive.c -o ./Release/libcryptohive.dll -Wl,--out-implib,./Release/libcryptohive.a
+//gcc -shared -static -O3 -fvisibility=hidden coinhive.c wasm-rt-impl.c libcryptohive.c -o ./Release/libcryptohive.dll -Wl,--out-implib,./Release/libcryptohive.a
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
