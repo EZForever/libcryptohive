@@ -96,9 +96,8 @@ u32 (*Z_envZ__gmtimeZ_ii)(u32) = envGMTime;
 //--- Import fixup functions ---
 
 __attribute__((noreturn)) void envAbort(u32 what) {
-  //TODO: Process JSON data in 'what'.
-  //printf("abort(%s). Build with -s ASSERTIONS=1 for more info.\n", (char*)what);
-  puts("ABORTED");
+  //How to process JSON data in 'what'?
+  puts("[F][LIB] ABORTED");
   exit(1);
 }
 
@@ -111,27 +110,17 @@ u32 envGetTotalMemory(void) {
 }
 
 __attribute__((noreturn)) u32 envAbortOnCannotGrowMemory(void) {
-  //envAbort("Cannot enlarge memory arrays. Either (1) compile with -s TOTAL_MEMORY=X with X higher than the current value " + TOTAL_MEMORY + ", (2) compile with -s ALLOW_MEMORY_GROWTH=1 which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with -s ABORTING_MALLOC=0 ");
+  puts("[E][LIB] Cannot enlarge memory arrays.");
   envAbort(0);
 }
 
 void envSetErrNo(u32 value) {
-  //TODO: Translate this
-  //if (Module["___errno_location"]) HEAP32[Module["___errno_location"]() >> 2] = value;
+  //Module["___errno_location"] does not exist
   //return value; //???
 }
 
 u32 envSyscall20(u32 which, u32 varargs) {
-/* TODO: Translate this
-    SYSCALLS.varargs = varargs;
-    try {
-        return PROCINFO.pid //42
-    } catch(e) {
-        if (typeof FS === "undefined" || !(e instanceof FS.ErrnoError)) abort(e);
-        return - e.errno
-    }
-}
-*/
+  //SYSCALLS & PROCINFO are not used in program
   return 42;
 }
 
