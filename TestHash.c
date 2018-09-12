@@ -13,8 +13,8 @@ int MeetsTarget(unsigned char *output, unsigned char *target) {
   for(int i = 0; i < targetLen; i++) {
     int hi = outputLen - i - 1;
     int ti = targetLen - i - 1;
-    if (output[hi] > target[ti]) return 0;
-      else if (output[hi] < target[ti]) return 1;
+    if(output[hi] > target[ti]) return 0;
+      else if(output[hi] < target[ti]) return 1;
   }
   return 0;
 }

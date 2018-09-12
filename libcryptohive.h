@@ -7,16 +7,16 @@
 extern "C" {
 #endif
 
-//inputLen£ºMaximum length of input buffer.
+//inputLen: Maximum length of input buffer.
 #define inputLenMax 84
 
 //blobLen: Current length of a Monero blob.
 #define blobLen 76
 
-//outputLen: Minimum length of input buffer.
+//outputLen: Minimum length of output buffer.
 #define outputLen 32
 
-//cryptohive_create: Call before any cryptohive_hash call.
+//cryptohive_create: Call before any _hash / _p* call.
 void cryptohive_create(void);
 
 //cryptohive_destroy: Call before thread ends.

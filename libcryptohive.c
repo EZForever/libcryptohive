@@ -30,12 +30,11 @@
 
 THREAD struct {
   u32 ctx;
+  u32 inputOffset;
+  u32 outputOffset;
   wasm_rt_memory_t envMemory;
   wasm_rt_table_t envTable;
 } cryptohive_ctx = {0};
-
-u32 inputOffset = 0;
-u32 outputOffset = 0;
 
 //--- Import definitions ---
 
@@ -151,11 +150,11 @@ u32 envGMTime(u32 _time) {
 //--- Private functions ---
 
 void _cryptohive_Input(unsigned char input[], uint32_t inputLen) {
-  memcpy(&cryptohive_ctx.envMemory.data[inputOffset], input, inputLen);
+  memcpy(&cryptohive_ctx.envMemory.data[cryptohive_ctx.inputOffset], input, inputLen);
 }
 
 void _cryptohive_Output(unsigned char output[]) {
-  memcpy(output, &cryptohive_ctx.envMemory.data[outputOffset], outputLen);
+  memcpy(output, &cryptohive_ctx.envMemory.data[cryptohive_ctx.outputOffset], outputLen);
 }
 
 //--- Public functions ---
@@ -173,9 +172,9 @@ EXPORT void cryptohive_create(void) {
   *(u32*)(&cryptohive_ctx.envMemory.data[DYNAMICTOP_PTR]) = DYNAMIC_BASE;
 
   TRY()
-  inputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(inputLenMax);
-  outputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(outputLen);
   cryptohive_ctx.ctx = (*WASM_RT_ADD_PREFIX(Z__cryptonight_createZ_iv))();
+  cryptohive_ctx.inputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(inputLenMax);
+  cryptohive_ctx.outputOffset = (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(outputLen);
 }
 
 EXPORT void cryptohive_destroy(void) {
@@ -187,14 +186,14 @@ EXPORT void cryptohive_destroy(void) {
 EXPORT void cryptohive_hash_v0(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
   TRY()
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, cryptohive_ctx.inputOffset, cryptohive_ctx.outputOffset, inputLen);
   _cryptohive_Output(output);
 }
 
 EXPORT void cryptohive_hash_v1(unsigned char input[], unsigned char output[], uint32_t inputLen) {
   _cryptohive_Input(input, inputLen);
   TRY()
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, inputLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, cryptohive_ctx.inputOffset, cryptohive_ctx.outputOffset, inputLen);
   _cryptohive_Output(output);
 }
 
@@ -203,17 +202,17 @@ EXPORT void cryptohive_hash(unsigned char input[], unsigned char output[], uint3
 }
 
 EXPORT unsigned char *cryptohive_pInput(void) {
-  return (unsigned char *)&cryptohive_ctx.envMemory.data[inputOffset];
+  return (unsigned char *)&cryptohive_ctx.envMemory.data[cryptohive_ctx.inputOffset];
 }
 
 EXPORT unsigned char *cryptohive_pOutput(void) {
-  return (unsigned char *)&cryptohive_ctx.envMemory.data[outputOffset];
+  return (unsigned char *)&cryptohive_ctx.envMemory.data[cryptohive_ctx.outputOffset];
 }
 
 EXPORT void cryptohive_hash_v0_Q(void) {
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, blobLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(cryptohive_ctx.ctx, cryptohive_ctx.inputOffset, cryptohive_ctx.outputOffset, blobLen);
 }
 
 EXPORT void cryptohive_hash_v1_Q(void) {
-  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, inputOffset, outputOffset, blobLen);
+  (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(cryptohive_ctx.ctx, cryptohive_ctx.inputOffset, cryptohive_ctx.outputOffset, blobLen);
 }
