@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <sys/timeb.h>
 
 #include "wasm-rt-impl.h"
 #include "coinhive.h"
@@ -135,9 +136,11 @@ u32 envFTime(u32 p) {
 
 u32 envGMTimeR(u32 _time, u32 tmPtr) {
   time_t timestamp = *(time_t *)&cryptohive_ctx.envMemory.data[_time] * 1000;
-  //I can't get this to work
-  //gmtime_r(&timestamp, (struct tm *)&cryptohive_ctx.envMemory.data[tmPtr]);
+#ifdef __MINGW32__ //MinGW doesn't know gmtime_r, but gmtime_s
   gmtime_s((struct tm *)&cryptohive_ctx.envMemory.data[tmPtr], &timestamp);
+#else
+  gmtime_r(&timestamp, (struct tm *)&cryptohive_ctx.envMemory.data[tmPtr]);
+#endif
   *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 36]) = 0;
   *(u32*)(&cryptohive_ctx.envMemory.data[tmPtr + 40]) = ___tm_timezone;
   return tmPtr;

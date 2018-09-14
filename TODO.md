@@ -1,8 +1,8 @@
 ## TODO ##
 - [x] Make it work  
 - [x] Thread-safe (~~Stupid stack depth & jmpbuf~~)  
-- [x] Non-Windows support (no w32api reference)    
-- [ ] x86 support (untested)  
+- [ ] Static library (?)  
+- [ ] Compatibility (EVEN CAN NOT COMPILE on my RPi2)  
 - [ ] Performance (Current: 1.216x slower than JS)  
 - [x] Make one of my own (see HiveMiner)  
 - [ ] My initial intention (https://github.com/cazala/coin-hive-stratum/issues/140)  
