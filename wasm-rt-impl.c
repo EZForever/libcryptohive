@@ -31,8 +31,10 @@ typedef struct FuncType {
   uint32_t result_count;
 } FuncType;
 
+//MOD: Add THREAD mark.
 THREAD uint32_t wasm_rt_call_stack_depth;
 
+//MOD: Add THREAD mark.
 THREAD jmp_buf g_jmp_buf;
 FuncType* g_func_types;
 uint32_t g_func_type_count;

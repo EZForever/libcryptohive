@@ -1,4 +1,4 @@
-//gcc -I. -L./Release -llibcryptohive TestSpeed.c -o ./Release/TestSpeed.exe
+//gcc -O3 -I. -L./Release -llibcryptohive TestSpeed.c -o ./Release/TestSpeed.exe
 /* Test data:
 16 0707998e9edc055c022dd408ffe8e243fe9e6fb24e38a63c18873f492e34ffd2d0df6e8d8f569b0000000080a0d1d017dcc6117b6a9ba2f072074cb4e780e8f9fcc1f4b35f95febda8ae9801
 a206161b78840ab02479d7cedc4d10cbd8a9474a049417914c0a2de987365f00
