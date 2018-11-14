@@ -2,7 +2,8 @@
 兼容CoinHive的CryptoNight库
   
 ## 蛤？ ##
-自从四月七号门罗币硬分叉以来，CoinHive的脚本不再向非CoinHive矿池提交正确的hash。  
+**对变种2的支持正在开发中**
+自从~~四月七号~~门罗币硬分叉以来，CoinHive的脚本不再向非CoinHive矿池提交正确的hash。  
 这导致原先的所有“CoinHive代理”软件全部停止工作（看[这里](https://github.com/cazala/coin-hive-stratum/issues/167)）。  
 经过对代码的分析，我找到了hash错误的根源：CoinHive实现的CryptoNight库并不标准。  
 例如，对于  

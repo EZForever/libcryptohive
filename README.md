@@ -2,7 +2,8 @@
 A CoinHive-compatible CryptoNight hashing library
   
 ## What? ##
-Since the April 7 Monero hard fork, CoinHive's script no longer submits the correct hash to a non-CoinHive pool.  
+**Variant 2's support IS working in progress!**  
+Since the ~~April 7~~ Monero hard fork, CoinHive's script no longer submits the correct hash to a non-CoinHive pool.  
 This caused all the "CoinHive proxy" software to stop working (see [here](https://github.com/cazala/coin-hive-stratum/issues/167)).  
 After analyzing the code, I found the source of the hash error: the CryptoNight library implemented by CoinHive is not standard.  
 For example, for  
