@@ -16,6 +16,8 @@
 
 #include "wasm-rt-impl.h"
 
+//MOD: Fix `warning: implicit declaration of function 'memset'`
+#include <string.h>
 #include <assert.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -33,6 +35,7 @@ typedef struct FuncType {
 
 //MOD: Add THREAD mark.
 THREAD uint32_t wasm_rt_call_stack_depth;
+THREAD uint32_t g_saved_call_stack_depth;
 
 //MOD: Add THREAD mark.
 THREAD jmp_buf g_jmp_buf;
@@ -41,6 +44,7 @@ uint32_t g_func_type_count;
 
 void wasm_rt_trap(wasm_rt_trap_t code) {
   assert(code != WASM_RT_TRAP_NONE);
+  wasm_rt_call_stack_depth = g_saved_call_stack_depth;
   longjmp(g_jmp_buf, code);
 }
 
@@ -105,9 +109,10 @@ uint32_t wasm_rt_grow_memory(wasm_rt_memory_t* memory, uint32_t delta) {
   if (new_pages < old_pages || new_pages > memory->max_pages) {
     return (uint32_t)-1;
   }
-  memory->data = realloc(memory->data, new_pages);
   memory->pages = new_pages;
   memory->size = new_pages * PAGE_SIZE;
+  memory->data = realloc(memory->data, memory->size);
+  memset(memory->data + old_pages * PAGE_SIZE, 0, delta * PAGE_SIZE);
   return old_pages;
 }
 

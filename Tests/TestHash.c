@@ -1,4 +1,4 @@
-//gcc -O3 -I. -L./Release -llibcryptohive TestHash.c -o ./Release/TestHash.exe
+//gcc -O3 -I.. -L../Release -llibcryptohive TestHash.c -o ../Release/TestHash.exe
 /* Test data:
 ffffff00:0707998e9edc055c022dd408ffe8e243fe9e6fb24e38a63c18873f492e34ffd2d0df6e8d8f569b0000000080a0d1d017dcc6117b6a9ba2f072074cb4e780e8f9fcc1f4b35f95febda8ae9801
 442a496b:7252d3b278a93c80678ec93454dfa9e0a4f9329e74201a7bbf271c359d112f00
@@ -36,7 +36,10 @@ int main(void) {
   //*nonce = (uint32_t)&nonce; //-Wpointer-to-int-cast on x64
   __asm__ __volatile__("rdtsc":"=a"(*nonce)); //Initial value; differs each thread
 
-  void (*fHash)(void) = input[0] == 7 ? &cryptohive_hash_v1_Q : &cryptohive_hash_v0_Q;
+  void (*fHash)(void);
+  if(input[0] > 7) fHash = &cryptohive_hash_v2_Q;
+    else if(input[0] == 7) fHash = &cryptohive_hash_v1_Q;
+      else fHash = &cryptohive_hash_v0_Q;
 
   do {
     //XorShift32 from: https://en.wikipedia.org/wiki/Xorshift#Example_implementation

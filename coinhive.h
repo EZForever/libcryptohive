@@ -1,5 +1,5 @@
-#ifndef ___COINHIVE_H_GENERATED_
-#define ___COINHIVE_H_GENERATED_
+#ifndef COINHIVE_H_GENERATED_
+#define COINHIVE_H_GENERATED_
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -69,6 +69,8 @@ extern void (*WASM_RT_ADD_PREFIX(Z__cryptonight_destroyZ_vi))(u32);
 extern void (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_0Z_viiii))(u32, u32, u32, u32);
 /* export: '_cryptonight_hash_variant_1' */
 extern void (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_1Z_viiii))(u32, u32, u32, u32);
+/* export: '_cryptonight_hash_variant_2' */
+extern void (*WASM_RT_ADD_PREFIX(Z__cryptonight_hash_variant_2Z_viiii))(u32, u32, u32, u32);
 /* export: '_malloc' */
 extern u32 (*WASM_RT_ADD_PREFIX(Z__mallocZ_ii))(u32);
 /* export: 'stackAlloc' */
@@ -77,4 +79,4 @@ extern u32 (*WASM_RT_ADD_PREFIX(Z_stackAllocZ_ii))(u32);
 }
 #endif
 
-#endif  /* ___COINHIVE_H_GENERATED_ */
+#endif  /* COINHIVE_H_GENERATED_ */

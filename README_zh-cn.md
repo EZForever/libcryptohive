@@ -1,8 +1,8 @@
 # libcryptohive #
-兼容CoinHive的CryptoNight库
+兼容CoinHive的CryptoNight库  
+**现在支持变种2**  
   
 ## 蛤？ ##
-**对变种2的支持正在开发中**
 自从~~四月七号~~门罗币硬分叉以来，CoinHive的脚本不再向非CoinHive矿池提交正确的hash。  
 这导致原先的所有“CoinHive代理”软件全部停止工作（看[这里](https://github.com/cazala/coin-hive-stratum/issues/167)）。  
 经过对代码的分析，我找到了hash错误的根源：CoinHive实现的CryptoNight库并不标准。  
@@ -13,15 +13,15 @@
 `result = 032fe2ad6afbadc7e1ef7be11da918f4702ca4491242836020d3d05cc8d71100`  
 而CoinHive实现的结果为  
 `result = 346ba98c32de42306f963abc8f1d896e762e6aa599fc3930fe82c8c3f4ac351a`  
-但是，这一部分代码被编译为一个WebAssembly文件（[下载点这里](https://coinhive.com/lib/worker-v2.wasm)），故而难以分析。  
+但是，这一部分代码被编译为一个WebAssembly文件（~~[下载点这里](https://coinhive.com/lib/worker-v2.wasm)~~ 下载不可用），故而难以分析。  
 所以我创建了这个repo，用来将这个WebAssembly文件转换为其他语言可用的库。  
   
 ## 如何使用 ##
 *注意：我不保证能够正常编译、正常运行、正常计算，等等。
-我只在自己的电脑上（Win10 x64， ~~TCC 0.9.27 x86~~ MinGW-w64，CoinHive worker-v2.wasm）测试过。*  
-把所有C文件（除了 `Test*.c`）编译到一起，生成DLL/SO文件。  
+我只在自己的电脑上（Win10 x64，MinGW-w64，CoinHive 'worker-v8.wasm'）测试过。*  
+把所有C文件编译到一起，生成 `.dll` / `.so` 文件。  
 加上 `-O3` 开关可以得到大约7倍的性能提升。  
-具体使用方式参见 `libcryptohive.h`和 `Test*.c`。  
+具体使用方式参见 `libcryptohive.h`和 `Tests/Test*.c`。  
   
 ## 开源许可 ##
 `wasm-rt*` 修改自 [wasm2c](https://github.com/WebAssembly/wabt/tree/master/wasm2c)，遵守 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)。  

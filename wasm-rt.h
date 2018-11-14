@@ -21,9 +21,9 @@
 
 //MOD: Add THREAD to mark thread-independent variables.
 #ifdef __GNUC__
-#define THREAD __thread
+  #define THREAD __thread
 #else
-#define THREAD __declspec(thread)
+  #define THREAD __declspec(thread)
 #endif
 
 #ifdef __cplusplus
