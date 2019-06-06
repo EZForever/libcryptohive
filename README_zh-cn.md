@@ -2,6 +2,9 @@
 兼容CoinHive的CryptoNight库  
 **现在支持变种2**  
   
+## 停止维护 ##
+[CoinHive 关门大吉了。](https://jsecoin.com/coinhive-closing-down/)
+  
 ## 蛤？ ##
 自从~~四月七号~~门罗币硬分叉以来，CoinHive的脚本不再向非CoinHive矿池提交正确的hash。  
 这导致原先的所有“CoinHive代理”软件全部停止工作（看[这里](https://github.com/cazala/coin-hive-stratum/issues/167)）。  

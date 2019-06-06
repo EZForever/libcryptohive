@@ -2,6 +2,9 @@
 A CoinHive-compatible CryptoNight hashing library  
 **Now support variant 2!**  
   
+## NOT MAINTAINED ANYMORE ##
+[CoinHive is now closed down.](https://jsecoin.com/coinhive-closing-down/)
+  
 ## What? ##
 Since the ~~April 7~~ Monero hard fork, CoinHive's script no longer submits the correct hash to a non-CoinHive pool.  
 This caused all the "CoinHive proxy" software to stop working (see [here](https://github.com/cazala/coin-hive-stratum/issues/167)).  
